@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>
+      Chart
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <script language="javascript" src="/public/js/jquery-1.11.0.min.js"></script>
+
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+      <meta http-equiv="Access-Control-Allow-Methods" content="POST, GET, OPTIONS"><meta http-equiv="Access-Control-Allow-Origin" content="*">
+      <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+      <script>
+          function getScript() {
+            var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+
+            if (is_chrome) {
+                // generate script element and set its source
+                var s = document.createElement('script');
+                s.src = "http://api.widgets.org/widget/1.1.2/widget_api.js?autoCreate=false&log=true";
+                // remove the script element after loading
+                s.addEventListener( 'load', function(){ s.parentNode.removeChild(s); } );
+                (document.head||document.documentElement).appendChild(s);
+            }
+        }
+      </script>
+    <script>
+        $(function() {
+
+            Highcharts.setOptions({
+                global : {
+                    useUTC : false
+                }
+            });
+
+            // Create the chart
+            $('#container').highcharts('StockChart', {
+                rangeSelector : {
+                    selected : 1,
+                    inputEnabled: $('#container').width() > 480
+                },
+
+                title : {
+                    text : 'AAPL Stock Price'
+                },
+
+                series : [{
+                    name : 'Random data',
+                    data : {{ result | safe }}
+                }]
+            });
+
+        });
+
+        $(document).ready(function(){
+            $("button").click(function(){
+
+              $.ajax({
+                  headers: {
+                    'Access-Control-Allow-Origin': '*'
+                    },
+                  type: 'POST',
+                  url:"http://10.2.14.22",
+                  success:function(result){
+                       alert('dafs');
+              }});
+            });
+        });
+    </script>
+
+
+  </head>
+  <body>
+
+
+    <div id="container" style="height: 400px; min-width: 310px"></div>
+
+    <button>Get External Content</button>
+
+
+
+  </body>
+
+
+</html>

@@ -1,0 +1,28 @@
+worker_processes  1;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    default_type  application/octet-stream;
+    server_names_hash_bucket_size 64;
+
+
+    server {
+        listen       80;
+
+        server_name  localhost;
+
+        location /mp3 {
+            root "/root/mp3/";
+        }
+
+        location /download {
+            root "/srv/download/;
+        }
+    }
+
+}

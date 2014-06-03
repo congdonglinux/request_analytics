@@ -1,0 +1,43 @@
+
+
+
+
+- name: Upload code
+  local_action: command rsync -vaz -e ssh
+                              --rsync-path='sudo rsync'
+                              --exclude='.*'
+                              --exclude='*.pyc'
+                              ../hhh_analytics
+                              {{ server.user }}@{{ inventory_hostname }}:{{ project.root }}
+  tags:
+    - update_code
+
+
+- name: Ensure old files are deleted
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/nginx/hhh_counter.lua
+    - /etc/nginx/hhh_init.lua
+    - /etc/nginx/hhh_request_filter.conf
+    - /etc/nginx/statsd.lua
+    - /etc/nginx/hhh_filter.lua
+  sudo: True
+
+
+- name: Update request filter config files
+  template: >
+    src=../request_filter/{{ item }}
+    dest=/etc/nginx/{{ item }}
+    mode=0644
+  with_items:
+    - hhh_counter.lua
+    - hhh_init.lua
+    - hhh_request_filter.conf
+    - statsd.lua
+    - hhh_filter.lua
+  sudo: True
+  tags:
+    - update_nginx
+
+
+

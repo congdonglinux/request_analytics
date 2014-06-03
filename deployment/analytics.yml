@@ -1,0 +1,8 @@
+---
+
+
+- hosts: analytics
+  gather_facts: no
+  roles:
+    - analytics
+
